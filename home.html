@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel de Usuario</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <style>
+        /* Navbar con verde suave */
+        .navbar-custom {
+            background-color: #81a387;
+        }
+        /* Portada/banner */
+        .banner {
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+            margin-bottom: 30px;
+        }
+
+        /* Opción transporte horizontal */
+        .transport-option {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: #f9f9f9;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        }
+        .transport-img {
+            max-width: 350px;
+            width: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .transport-content {
+            flex: 1;
+        }
+        .btn-go {
+            margin-top: 15px;
+            min-width: 180px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #81a387;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        footer a {
+            color: #e0f2f1;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botón chat flotante */
+        #chat-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25d366; /* verde WhatsApp */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+        #chat-btn:hover {
+            background-color: #1ebe57;
+        }
+        #chat-btn i {
+            color: white;
+            font-size: 30px;
+        }
+
+        /* Responsive */
+        @media(max-width: 767px) {
+            .transport-option {
+                flex-direction: column;
+                text-align: center;
+            }
+            .transport-img {
+                max-width: 300px;
+                margin-bottom: 15px;
+            }
+            .btn-go {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+         /* Botón color personalizado */
+        .btn-personalizado {
+            background-color: #208aa5; /* tu color dorado */
+            color: white;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .btn-personalizado:hover,
+        .btn-personalizado:focus {
+            background-color: #13758d; /* más oscuro al hover */
+            color: white;
+        }
+
+        /* Tabla horarios */
+        .horarios-section {
+            max-width: 900px;
+            margin: 0 auto 50px;
+        }
+        .horarios-section h4 {
+            margin-bottom: 20px;
+            color: #81a387;
+        }
+        .table thead {
+            background: linear-gradient(90deg, #81a387, #a5c9a1); /* degradado verde suave */
+            color: white;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+    <div class="container">
+        <!-- Logo + texto -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="img/logo_blanco.png" alt="Logo" width="100%" height="40" class="me-2" />
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Mis Reservas</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                    <i class="bi bi-person-circle me-1" style="font-size: 1.4rem;"></i>
+                    <span class="nav-link text-light mb-0" style="cursor: default;">{{ usuario }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Portada / Banner -->
+<div class="banner">
+    <div class="text-center">
+        <h1>Viaja cómodo y seguro</h1>
+        <p class="lead">Reserva o compra tus boletos de transporte en un solo lugar</p>
+    </div>
+</div>
+
+<!-- Opción única de transporte (horizontal) -->
+<div class="container">
+    <div class="transport-option">
+        <img
+            src="img/embarcacion.jpg"
+            alt="Transporte"
+            class="transport-img"
+        />
+        <div class="transport-content">
+            <h3>Compra o reserva tus boletos</h3>
+            <p>Ingresa para elegir una embarcación y realizar tu compra o reserva de boletos fácilmente.</p>
+            <a href="boleteria.html" class="btn btn-lg btn-personalizado btn-go">Ir a Boletos</a>
+        </div>
+    </div>
+</div>
+
+<!-- Sección horarios -->
+<div class="horarios-section container">
+    <h4>Horarios de Transporte</h4>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle text-center">
+            <thead>
+                <tr>
+                    <th>Embarcación</th>
+                    <th>Salida</th>
+                    <th>Días</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Embarcacion A -->
+                <tr>
+                    <td rowspan="4">Embarcación A</td>
+                    <td>7:00 AM (Puná → Guayaquil)</td>
+                    <td>Lunes a Domingo</td>
+                </tr>
+                <tr>
+                    <td>2:30 PM (Guayaquil → Puná)</td>
+                    <td>Martes</td>
+                </tr>
+                <tr>
+                    <td>2:00 PM (Guayaquil → Puná)</td>
+                    <td>Lunes, Miércoles, Jueves, Viernes, Domingo</td>
+                </tr>
+                <tr>
+                    <td>10:00 AM (Guayaquil → Puná)</td>
+                    <td>Sábado</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped table-bordered align-middle text-center">
+            <thead>
+                <tr>
+                    <th>Embarcación</th>
+                    <th>Salida</th>
+                    <th>Días</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Embarcacion B -->
+                <tr>
+                    <td rowspan="4">Embarcación B</td>
+                    <td>7:00 AM (Puná → Guayaquil)</td>
+                    <td>Lunes a Domingo</td>
+                </tr>
+                <tr>
+                    <td>2:30 PM (Guayaquil → Puná)</td>
+                    <td>Miércoles</td>
+                </tr>
+                <tr>
+                    <td>2:00 PM (Guayaquil → Puná)</td>
+                    <td>Lunes, Martes, Jueves, Viernes, Domingo</td>
+                </tr>
+                <tr>
+                    <td>11:00 AM (Guayaquil → Puná)</td>
+                    <td>Sábado</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Aviso profesional -->
+<div class="alert alert-info mt-4 text-center" role="alert" style="max-width: 900px; margin: 0 auto 50px;">
+    <strong>Importante:</strong> En caso de modificaciones en los horarios debido a feriados o circunstancias especiales, se informará oportunamente a nuestros usuarios a través de nuestros canales oficiales.
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>© 2025 Travel To. Todos los derechos reservados.</p>
+        <p>
+            <a href="#">Política de Privacidad</a> | 
+            <a href="#">Términos y Condiciones</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Botón de chat flotante -->
+<div id="chat-btn" title="Chatear con soporte">
+    <i class="bi bi-chat-dots-fill"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Acción al click en botón chat (puedes cambiar el enlace por tu chat real)
+    document.getElementById('chat-btn').addEventListener('click', function () {
+        // Por ejemplo abrir WhatsApp con un número fijo
+        window.open('https://wa.me/1234567890?text=Hola,%20quiero%20soporte%20en%20BoletosApp', '_blank');
+    });
+</script>
+
+</body>
+</html>
