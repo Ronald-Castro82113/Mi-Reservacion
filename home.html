@@ -14,7 +14,7 @@
     <style>
         /* Navbar con verde suave */
         .navbar-custom {
-            background-color: #81a387;
+            background-color: #5e8d67;
         }
         /* Portada/banner */
         .banner {
@@ -201,6 +201,12 @@
             <h3>Compra o reserva tus boletos</h3>
             <p>Ingresa para elegir una embarcación y realizar tu compra o reserva de boletos fácilmente.</p>
             <a href="boleteria.html" class="btn btn-lg btn-personalizado btn-go">Ir a Boletos</a>
+            <hr>
+
+            <p class="mt-3">¿Compraste un boleto pero ya no puedes viajar?</p>
+            <button type="button" class="btn btn-sm btn-personalizado" data-bs-toggle="modal" data-bs-target="#reventaModal">
+                Poner mi boleto a la venta
+            </button>
         </div>
     </div>
 </div>
@@ -276,6 +282,26 @@
     <strong>Importante:</strong> En caso de modificaciones en los horarios debido a feriados o circunstancias especiales, se informará oportunamente a nuestros usuarios a través de nuestros canales oficiales.
 </div>
 
+<!-- Sección Lista de Espera -->
+<div class="container mb-5" style="max-width: 900px;">
+    <div class="alert alert-warning text-center">
+        <h4 class="mb-3">¿No hay boletos disponibles?</h4>
+        <p>Déjanos tus datos. En caso de que se habilite una embarcación disponible, te avisaremos.</p>
+
+        <form id="lista-espera-form" class="row g-3 justify-content-center">
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Tu nombre completo" required>
+            </div>
+            <div class="col-md-6">
+                <input type="tel" class="form-control" placeholder="Tu número de contacto" required>
+            </div>
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-personalizado">Unirme a la Lista de Espera</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Footer -->
 <footer>
     <div class="container">
@@ -301,6 +327,71 @@
         window.open('https://wa.me/1234567890?text=Hola,%20quiero%20soporte%20en%20BoletosApp', '_blank');
     });
 </script>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Acción al enviar el formulario de lista de espera
+    document.getElementById('lista-espera-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            icon: 'success',
+            title: '¡Te has unido a la lista de espera!',
+            text: 'Te avisaremos en caso de que haya transporte disponible.',
+            confirmButtonColor: '#208aa5'
+        });
+
+        this.reset();
+    });
+</script>
+
+<script>
+    document.getElementById('form-reventa').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        Swal.fire({
+            icon: 'success',
+            title: '¡Boleto publicado!',
+            text: 'Tu boleto ha sido publicado en la sección de reventa. Un interesado podrá contactarte.',
+            confirmButtonColor: '#208aa5'
+        });
+    
+        this.reset();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('reventaModal'));
+        modal.hide();
+    });
+    </script>
+    
+<!-- Modal Reventa -->
+<div class="modal fade" id="reventaModal" tabindex="-1" aria-labelledby="reventaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reventaModalLabel">Publicar Boleto en Reventa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-reventa">
+            <div class="mb-3">
+              <label for="nombreReventa" class="form-label">Tu Nombre</label>
+              <input type="text" class="form-control" id="nombreReventa" required>
+            </div>
+            <div class="mb-3">
+              <label for="contactoReventa" class="form-label">Número de Contacto</label>
+              <input type="tel" class="form-control" id="contactoReventa" required>
+            </div>
+            <div class="mb-3">
+              <label for="detallesBoleto" class="form-label">Detalles del Boleto</label>
+              <textarea class="form-control" id="detallesBoleto" rows="3" placeholder="Ejemplo: Embarcación A, 7:00 AM, Lunes" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-personalizado">Publicar Boleto</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 </body>
 </html>
