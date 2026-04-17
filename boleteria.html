@@ -2,209 +2,247 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reserva o Compra de Boletos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Boletos | TravelTo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        .navbar-custom {
-            background-color: #5e8d67;
+        :root {
+            --brand-blue: #208aa5;
+            --brand-green: #4a6d52;
+            --brand-orange: #f39c12;
+            --bg-light: #f8fafc;
         }
+
+        body { font-family: 'Lexend', sans-serif; background-color: var(--bg-light); color: #2d3436; }
+
+        /* Navbar idéntico a Home */
+        .navbar-custom { background-color: white; border-bottom: 1px solid #e2e8f0; padding: 15px 0; }
+        .navbar-brand { color: var(--brand-blue) !important; font-weight: 700; font-size: 1.6rem; letter-spacing: -1px; }
+
+        /* Tarjetas Estilo Home */
+        .booking-card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Diseño de Cabina / Bus */
+        .cabin-container {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px 50px 25px 25px;
+            padding: 45px 20px 30px 20px;
+            max-width: 330px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .cabin-container::before {
+            content: "FRENTE";
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            font-size: 0.7rem; font-weight: 700; color: #cbd5e1; letter-spacing: 3px;
+        }
+
+        /* Asientos Estilizados */
         .asiento {
-            width: 50px;
-            height: 50px;
-            margin: 5px;
-            background-color: #193f87;
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-            line-height: 50px;
-            cursor: pointer;
+            width: 45px; height: 45px; margin: 6px;
+            background-color: white;
+            color: var(--brand-blue);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease;
         }
-        .asiento.seleccionado {
-            background-color: #ffc107;
-            color: black;
+        
+        .asiento:hover { transform: scale(1.1); border-color: var(--brand-blue); }
+        
+        /* Estados de Asientos */
+        .asiento.seleccionado { 
+            background-color: var(--brand-orange) !important; 
+            color: white !important; 
+            border-color: #d68910 !important;
         }
-        .asiento.exclusivo {
-            background-color: #4aa9fc;
-        }
-        .asiento.exclusivo.seleccionado {
-            background-color: #ffc107;
-            color: black;
-        }
-        .fila {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .pasillo {
-            width: 50px;
+        .asiento.reservado { background-color: #e2e8f0; color: #94a3b8; cursor: not-allowed; border: none; }
+        .asiento.comprado { background-color: #2d3436; color: white; cursor: not-allowed; border: none; }
+        .asiento.exclusivo { border-color: var(--brand-blue); border-style: dashed; }
+
+        .fila { display: flex; justify-content: center; }
+        .pasillo { width: 45px; }
+
+        /* Leyenda */
+        .legend-item { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .legend-box { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #e2e8f0; }
+
+        .btn-main {
+            padding: 15px 25px; border-radius: 16px; font-weight: 700; transition: 0.3s;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="home.html">
-            <img src="img/logo_blanco.png" alt="Logo" width="100%" height="40" class="me-2"/>
+            <i class="bi bi-droplet-half me-2"></i>TravelTo
         </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link active" href="home.html">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Mis Reservas</a>
-                </li>
-                <li class="nav-item d-flex align-items-center">
-                    <i class="bi bi-person-circle me-1" style="font-size: 1.4rem;"></i>
-                    <span class="nav-link text-light mb-0" style="cursor: default;">{{ usuario }}</span>
-                </li>
-            </ul>
+        <div class="ms-auto">
+             <span class="badge bg-light text-dark rounded-pill px-4 py-2 border shadow-sm">
+                <i class="bi bi-person-circle me-2 text-primary"></i>{{ usuario }}
+             </span>
         </div>
     </div>
 </nav>
 
-<!-- CONTENIDO -->
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Reserva o Compra de Boletos</h2>
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="booking-card h-100">
+                <h4 class="fw-bold mb-4" style="color: var(--brand-blue)">Reserva tu Espacio</h4>
+                <form id="formBoleto">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-600 small">Transporte</label>
+                            <select id="transporte" class="form-select border-0 bg-light p-3 rounded-4" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option>Transporte 1</option>
+                                <option>Transporte 2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-600 small">Nombres</label>
+                            <input type="text" id="nombres" class="form-control border-0 bg-light p-3 rounded-4" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-600 small">Apellidos</label>
+                            <input type="text" id="apellidos" class="form-control border-0 bg-light p-3 rounded-4" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-600 small">Cédula</label>
+                            <input type="text" id="cedula" class="form-control border-0 bg-light p-3 rounded-4" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-600 small">Día del Viaje</label>
+                            <input type="date" id="dia" class="form-control border-0 bg-light p-3 rounded-4" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-600 small">Ruta</label>
+                            <select id="ruta" class="form-select border-0 bg-light p-3 rounded-4" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option>Guayaquil → Puná</option>
+                                <option>Puná → Guayaquil</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
 
-    <div class="card shadow p-4">
-        <form id="formBoleto">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="transporte" class="form-label">Transporte</label>
-                    <select id="transporte" class="form-select" required>
-                        <option value="" disabled selected>Seleccione...</option>
-                        <option>Transporte 1</option>
-                        <option>Transporte 2</option>
-                        <option>Transporte 3</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="nombres" class="form-label">Nombres</label>
-                    <input type="text" id="nombres" class="form-control" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="apellidos" class="form-label">Apellidos</label>
-                    <input type="text" id="apellidos" class="form-control" required>
+                <div id="qrContainer" class="mt-4 p-3 text-center border rounded-4 bg-light" style="display: none;">
+                    <p class="small fw-bold mb-2">Código QR Confirmado</p>
+                    <img id="qrImage" src="" alt="QR" class="img-fluid rounded shadow-sm" style="max-width: 140px;">
                 </div>
             </div>
+        </div>
 
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="cedula" class="form-label">Cédula</label>
-                    <input type="text" id="cedula" class="form-control" required>
+        <div class="col-lg-5">
+            <div class="booking-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">Selección de Asientos</h5>
                 </div>
-                <div class="col-md-4">
-                    <label for="dia" class="form-label">Día</label>
-                    <input type="date" id="dia" class="form-control" required>
+
+                <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+                    <div class="legend-item"><div class="legend-box bg-white"></div>Libre</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #e2e8f0;"></div>Reservado</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #2d3436;"></div>Comprado</div>
                 </div>
-                <div class="col-md-4">
-                    <label for="ruta" class="form-label">Ruta</label>
-                    <select id="ruta" class="form-select" required>
-                        <option value="" disabled selected>Seleccione...</option>
-                        <option>Ciudad A → Ciudad B</option>
-                        <option>Ciudad B → Ciudad A</option>
-                    </select>
+
+                <div class="cabin-container">
+                    <div class="fila">
+                        <div class="asiento" data-num="1">1</div>
+                        <div class="asiento" data-num="2">2</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="5">5</div>
+                        <div class="asiento" data-num="6">6</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento" data-num="3">3</div>
+                        <div class="asiento" data-num="4">4</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="9">9</div>
+                        <div class="asiento" data-num="10">10</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento" data-num="7">7</div>
+                        <div class="asiento" data-num="8">8</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="13">13</div>
+                        <div class="asiento" data-num="14">14</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento" data-num="11">11</div>
+                        <div class="asiento" data-num="12">12</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="17">17</div>
+                        <div class="asiento" data-num="18">18</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento" data-num="15">15</div>
+                        <div class="asiento" data-num="16">16</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="21">21</div>
+                        <div class="asiento" data-num="22">22</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento" data-num="19">19</div>
+                        <div class="asiento" data-num="20">20</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="25">25</div>
+                        <div class="asiento" data-num="26">26</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento" data-num="23">23</div>
+                        <div class="asiento" data-num="24">24</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento" data-num="29">29</div>
+                        <div class="asiento" data-num="30">30</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento exclusivo" data-num="31">31</div>
+                        <div class="asiento exclusivo" data-num="32">32</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento exclusivo" data-num="33">33</div>
+                        <div class="asiento exclusivo" data-num="34">34</div>
+                    </div>
+                    <div class="fila">
+                        <div class="asiento exclusivo" data-num="35">35</div>
+                        <div class="asiento exclusivo" data-num="36">36</div>
+                        <div class="pasillo"></div>
+                        <div class="asiento exclusivo" data-num="37">37</div>
+                        <div class="asiento exclusivo" data-num="38">38</div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-grid gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-main" id="btnReservar" style="color: var(--brand-green); border-color: var(--brand-green);">
+                        <i class="bi bi-calendar-event me-2"></i>Reservar Asiento
+                    </button>
+                    <button type="button" class="btn btn-main shadow-sm" id="btnComprar" style="background: var(--brand-blue); color: white;">
+                        <i class="bi bi-wallet2 me-2"></i>Comprar Ahora
+                    </button>
                 </div>
             </div>
-
-            <h5 class="mt-4 text-center">Seleccione sus Asientos</h5>
-
-            <div class="mt-3">
-                <!-- Estructura tipo bus -->
-                <div class="fila">
-                    <div class="asiento" data-num="1">1</div>
-                    <div class="asiento" data-num="2">2</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="5">5</div>
-                    <div class="asiento" data-num="6">6</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento" data-num="3">3</div>
-                    <div class="asiento" data-num="4">4</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="9">9</div>
-                    <div class="asiento" data-num="10">10</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento" data-num="7">7</div>
-                    <div class="asiento" data-num="8">8</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="13">13</div>
-                    <div class="asiento" data-num="14">14</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento" data-num="11">11</div>
-                    <div class="asiento" data-num="12">12</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="17">17</div>
-                    <div class="asiento" data-num="18">18</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento" data-num="15">15</div>
-                    <div class="asiento" data-num="16">16</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="21">21</div>
-                    <div class="asiento" data-num="22">22</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento" data-num="19">19</div>
-                    <div class="asiento" data-num="20">20</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="25">25</div>
-                    <div class="asiento" data-num="26">26</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento" data-num="23">23</div>
-                    <div class="asiento" data-num="24">24</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento" data-num="29">29</div>
-                    <div class="asiento" data-num="30">30</div>
-                </div>
-                <!-- Asientos exclusivos -->
-                <div class="fila">
-                    <div class="asiento exclusivo" data-num="31">31</div>
-                    <div class="asiento exclusivo" data-num="32">32</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento exclusivo" data-num="33">33</div>
-                    <div class="asiento exclusivo" data-num="34">34</div>
-                </div>
-                <div class="fila">
-                    <div class="asiento exclusivo" data-num="35">35</div>
-                    <div class="asiento exclusivo" data-num="36">36</div>
-                    <div class="pasillo"></div>
-                    <div class="asiento exclusivo" data-num="37">37</div>
-                    <div class="asiento exclusivo" data-num="38">38</div>
-                </div>
-            </div>
-
-            <div class="mt-4 text-center">
-                <button type="button" class="btn btn-primary me-2" id="btnReservar">Reservar</button>
-                <button type="button" class="btn btn-success" id="btnComprar">Comprar</button>
-            </div>
-        </form>
-    </div>
-
-    <div id="qrContainer" class="text-center mt-4" style="display: none;">
-        <h5>Código QR de su boleto:</h5>
-        <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Boleto%20Confirmado" alt="QR Code">
+        </div>
     </div>
 </div>
 
 <script>
     const asientosSeleccionados = [];
 
-    document.querySelectorAll('.asiento').forEach(asiento => {
+    document.querySelectorAll('.asiento:not(.reservado):not(.comprado)').forEach(asiento => {
         asiento.addEventListener('click', () => {
             const num = asiento.getAttribute('data-num');
             if (asiento.classList.contains('seleccionado')) {
@@ -220,15 +258,24 @@
 
     document.getElementById('btnReservar').addEventListener('click', () => {
         if (validarFormulario()) {
-            Swal.fire('¡Reserva Exitosa!', 'Asientos: ' + asientosSeleccionados.join(', '), 'success');
+            Swal.fire({
+                title: 'Reserva Realizada',
+                text: 'Asientos reservados: ' + asientosSeleccionados.join(', '),
+                icon: 'success',
+                confirmButtonColor: '#4a6d52'
+            });
         }
     });
 
     document.getElementById('btnComprar').addEventListener('click', () => {
         if (validarFormulario()) {
-            Swal.fire('¡Compra Exitosa!', 'Asientos: ' + asientosSeleccionados.join(', '), 'success');
-            document.getElementById('qrImage').src =
-                `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Boletos%20Asientos:%20${asientosSeleccionados.join(',')}`;
+            Swal.fire({
+                title: '¡Compra Exitosa!',
+                text: 'Has adquirido los asientos: ' + asientosSeleccionados.join(', '),
+                icon: 'success',
+                confirmButtonColor: '#208aa5'
+            });
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Boleto_${asientosSeleccionados.join('_')}`;
             document.getElementById('qrContainer').style.display = 'block';
         }
     });
@@ -236,13 +283,10 @@
     function validarFormulario() {
         const transporte = document.getElementById('transporte').value;
         const nombres = document.getElementById('nombres').value;
-        const apellidos = document.getElementById('apellidos').value;
         const cedula = document.getElementById('cedula').value;
-        const dia = document.getElementById('dia').value;
-        const ruta = document.getElementById('ruta').value;
 
-        if (!transporte || !nombres || !apellidos || !cedula || !dia || !ruta || asientosSeleccionados.length === 0) {
-            Swal.fire('Error', 'Complete todos los campos y seleccione al menos un asiento.', 'error');
+        if (!transporte || !nombres || !cedula || asientosSeleccionados.length === 0) {
+            Swal.fire('Atención', 'Por favor complete sus datos y seleccione sus asientos.', 'warning');
             return false;
         }
         return true;
